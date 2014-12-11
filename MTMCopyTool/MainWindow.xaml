@@ -1,0 +1,213 @@
+﻿<controls:MetroWindow x:Class="MTMCopyTool.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
+        Title="Test Case Copy Tool" Height="519.5" Width="873" ResizeMode="CanResizeWithGrip">
+    <controls:MetroWindow.Resources>
+        <Style x:Key="CheckBoxStyle" TargetType="{x:Type CheckBox}">
+            <Setter Property="Foreground" Value="{DynamicResource LabelTextBrush}"/>
+            <Setter Property="FontSize" Value="{DynamicResource ContentFontSize}"/>
+            <Setter Property="FontFamily" Value="{DynamicResource ContentFontFamily}"/>
+            <Setter Property="HorizontalContentAlignment" Value="Left"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="Padding" Value="6,0,0,0"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type CheckBox}">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="18"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <VisualStateManager.VisualStateGroups>
+                                <VisualStateGroup x:Name="CommonStates">
+                                    <VisualState x:Name="Normal"/>
+                                    <VisualState x:Name="MouseOver">
+                                        <Storyboard>
+                                            <DoubleAnimation Duration="0" To="1" Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="hover"/>
+                                        </Storyboard>
+                                    </VisualState>
+                                    <VisualState x:Name="Pressed">
+                                        <Storyboard>
+                                            <DoubleAnimation Duration="0" To="1" Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="pressed"/>
+                                        </Storyboard>
+                                    </VisualState>
+                                    <VisualState x:Name="Disabled">
+                                        <Storyboard>
+                                            <DoubleAnimation Duration="0" To="0.55" Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="contentPresenter"/>
+                                            <DoubleAnimation Duration="0" To="1" Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="disabled"/>
+                                        </Storyboard>
+                                    </VisualState>
+                                </VisualStateGroup>
+                                <VisualStateGroup x:Name="CheckStates">
+                                    <VisualState x:Name="Checked">
+                                        <Storyboard>
+                                            <DoubleAnimation Duration="0" To="1" Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="checkBox"/>
+                                        </Storyboard>
+                                    </VisualState>
+                                    <VisualState x:Name="Unchecked"/>
+                                    <VisualState x:Name="Indeterminate">
+                                        <Storyboard>
+                                            <DoubleAnimation Duration="0" To="1" Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="IndeterminateCheck"/>
+                                        </Storyboard>
+                                    </VisualState>
+                                </VisualStateGroup>
+                                <VisualStateGroup x:Name="FocusStates">
+                                    <VisualState x:Name="Focused">
+                                        <Storyboard>
+                                            <DoubleAnimation Duration="0" To="1" Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="focused"/>
+                                        </Storyboard>
+                                    </VisualState>
+                                    <VisualState x:Name="Unfocused"/>
+                                </VisualStateGroup>
+                            </VisualStateManager.VisualStateGroups>
+                            <Rectangle Fill="{DynamicResource TransparentWhiteBrush}"/>
+                            <Rectangle x:Name="normal" Fill="{x:Null}" Height="18" Opacity="1" Stroke="{DynamicResource {x:Static SystemColors.ActiveCaptionTextBrushKey}}" StrokeThickness="1" Width="18"/>
+                            <Rectangle x:Name="hover" Fill="{DynamicResource WhiteBrush}" Height="18" Opacity="0" Stroke="{DynamicResource CheckBoxMouseOverBrush}" StrokeThickness="1" Width="18"/>
+                            <Rectangle x:Name="pressed" Fill="{DynamicResource WhiteBrush}" Height="18" Opacity="0" Stroke="{DynamicResource HighlightBrush}" StrokeThickness="1" Width="18"/>
+                            <Rectangle x:Name="focused" Fill="{DynamicResource WhiteBrush}" Height="18" Opacity="0" Stroke="{DynamicResource HighlightBrush}" StrokeThickness="1" Width="18"/>
+                            <Path x:Name="checkBox" Data="M1145.60717773438,430C1145.60717773438,430 1141.44995117188,435.077270507813 1141.44995117188,435.077270507813 1141.44995117188,435.077270507813 1139.23217773438,433.099975585938 1139.23217773438,433.099975585938 1139.23217773438,433.099975585938 1138,434.553833007813 1138,434.553833007813 1138,434.553833007813 1141.48217773438,438 1141.48217773438,438 1141.48217773438,438 1141.96875,437.9375 1141.96875,437.9375 1141.96875,437.9375 1147,431.34619140625 1147,431.34619140625 1147,431.34619140625 1145.60717773438,430 1145.60717773438,430z" Fill="{DynamicResource HighlightBrush}" Height="10" Opacity="0" Stretch="Fill" UseLayoutRounding="False" Width="12"/>
+                            <Rectangle x:Name="IndeterminateCheck" Fill="{DynamicResource GrayBrush3}" Height="3" Opacity="0" Width="8"/>
+                            <Rectangle x:Name="disabled" Fill="{DynamicResource SemiTransparentWhiteBrush}" Height="18" Opacity="0" StrokeThickness="1" Width="18"/>
+                            <ContentPresenter x:Name="contentPresenter" ContentTemplate="{TemplateBinding ContentTemplate}" Content="{TemplateBinding Content}" Grid.Column="1" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="{TemplateBinding Padding}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </controls:MetroWindow.Resources>
+    <controls:MetroWindow.WindowCommands>
+        <controls:WindowCommands>
+            <Button Click="ButtonBase_OnClick" Background="Transparent">
+                <StackPanel Orientation="Horizontal" >
+                    <Rectangle Width="20" Height="20">
+                        <Rectangle.Resources>
+                            <SolidColorBrush x:Key="BlackBrush" Color="White" />
+                        </Rectangle.Resources>
+                        <Rectangle.Fill>
+                            <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_information}" />
+                        </Rectangle.Fill>
+                    </Rectangle>
+                    <TextBlock Text="about" Foreground="White" Margin="3,0,0,0" />
+                </StackPanel>
+            </Button>
+        </controls:WindowCommands>
+    </controls:MetroWindow.WindowCommands>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="250"/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="320*"/>
+            <RowDefinition Height="353*"/>
+        </Grid.RowDefinitions>
+        <GroupBox x:Name="gp_connections" Header="Connections" Margin="0,5,5,0">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="95"/>
+                    <RowDefinition Height="95"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="180*"/>
+                </Grid.ColumnDefinitions>
+                <Button Content="Connect Source TFS" Command="{Binding ConnectSourceCommand}" HorizontalAlignment="Left" VerticalAlignment="Top" Width="135" Margin="10,10,0,0" Height="25"/>
+                <Button Content="Connect Target TFS" Command="{Binding ConnectTargetCommand}" HorizontalAlignment="Left" VerticalAlignment="Top" Width="135" Margin="10,10,0,0" Grid.Row="1" Height="25"/>
+
+                <Label Content="Server:" HorizontalAlignment="Left" Margin="10,40,0,0" VerticalAlignment="Top" Height="26" Width="46"/>
+                <Label Content="Project:" HorizontalAlignment="Left" Margin="10,66,0,0" VerticalAlignment="Top" Height="26" Width="49"/>
+                <TextBlock HorizontalAlignment="Left" Margin="64,45,0,0" TextWrapping="Wrap" Text="{Binding SourceTFS}" VerticalAlignment="Top" Height="16"/>
+
+                <Label Content="Server:" HorizontalAlignment="Left" Margin="10,40,0,0" Grid.Row="1" VerticalAlignment="Top" Height="26" Width="46"/>
+                <Label Content="Project:" HorizontalAlignment="Left" Margin="10,66,0,-3" Grid.Row="1" VerticalAlignment="Top" Height="23" Width="49"/>
+                <TextBlock HorizontalAlignment="Left" Margin="64,45,0,0" TextWrapping="Wrap" Grid.Row="1" Text="{Binding TargetTFS}" VerticalAlignment="Top" Height="16"/>
+                <TextBlock HorizontalAlignment="Left" Margin="64,71,0,0" TextWrapping="Wrap" Text="{Binding SourceProject}" VerticalAlignment="Top" Height="16" />
+                <TextBlock HorizontalAlignment="Left" Margin="64,74,0,0" TextWrapping="Wrap" Grid.Row="1" Text="{Binding TargetProject}" VerticalAlignment="Top" Height="16" />
+
+                <controls:ProgressRing IsActive="{Binding Working}" Width="40" Height="40" Foreground="#CCE51400" Grid.RowSpan="2" />
+            </Grid>
+        </GroupBox>
+        <GroupBox x:Name="gp_copy" Header="Mapping" Margin="0,5,0,0" Grid.Row="1" Grid.ColumnSpan="2">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="49*"/>
+                    <ColumnDefinition Width="52*"/>
+                </Grid.ColumnDefinitions>
+                <Border  Margin="3,3,3,3" BorderBrush="#FFA0A0A0" BorderThickness="1">
+                    <TreeView x:Name="plansTree"  >
+                        <TreeView.ItemContainerStyle>
+                            <Style TargetType="{x:Type TreeViewItem}">
+                                <Setter Property="IsExpanded" Value="{Binding IsExpanded, Mode=TwoWay}" />
+                                <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay}" />
+                                <Setter Property="FontWeight" Value="Normal" />
+                                <Style.Triggers>
+                                    <Trigger Property="IsSelected" Value="True">
+                                        <Setter Property="FontWeight" Value="Bold" />
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </TreeView.ItemContainerStyle>
+                        <TreeView.ItemTemplate>
+                            <HierarchicalDataTemplate ItemsSource="{Binding Children}">
+                                <StackPanel Orientation="Horizontal" Margin="3">
+                                    <CheckBox Style="{StaticResource CheckBoxStyle}" IsEnabled="{Binding CanChecked}" IsChecked="{Binding IsChecked, Mode=TwoWay}" Content="" />
+                                    <Image Source="{Binding SuiteImage}" Margin="0,0,2,0" Stretch="None"/>
+                                    <TextBlock Text="{Binding Name}" />
+                                    <TextBlock Text="{Binding TestCaseCount}"/>
+                                </StackPanel>
+                            </HierarchicalDataTemplate>
+                        </TreeView.ItemTemplate>
+                    </TreeView>
+                </Border>
+
+                <Button Content="Create Plan" Command="{Binding CreateTestPlanCommand}" Grid.Column="1" HorizontalAlignment="Right" Margin="0,3,10,0" VerticalAlignment="Top" Width="74"/>
+                <TextBox Grid.Column="1" Height="23" Margin="5,3,99,0" TextWrapping="Wrap" Text="{Binding TestPlanName, Mode=TwoWay}" VerticalAlignment="Top" Background="#FFECECEC"/>
+                <Border Grid.Column="1"  Margin="5,65,5,3" BorderThickness="1" BorderBrush="#FFA0A0A0" >
+                    <ListBox ItemsSource="{Binding TestPlans}" SelectedItem="{Binding TargetTestPlan}">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal" Margin="3">
+                                    <Image Source="{Binding SuiteImage}" Margin="0,0,2,0" Stretch="None"/>
+                                    <TextBlock Text="{Binding Name}" />
+                                    <TextBlock Text="{Binding TestCaseCount}"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </Border>
+                <Label Content="Target Test Plan:" Grid.Column="1" HorizontalAlignment="Left" Margin="5,34,0,0" VerticalAlignment="Top"/>
+                <controls:ProgressRing IsActive="{Binding Working}" Width="60" Height="60" Foreground="#CCE51400" Grid.ColumnSpan="2" />
+            </Grid>
+        </GroupBox>
+
+        <GroupBox x:Name="gp_settings" Grid.Column="1" Header="Settings" Margin="0,5,5,0">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="312"/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <Button Content="Start Migration" HorizontalAlignment="Right" Command="{Binding StartMigrationCommand}" VerticalAlignment="Bottom" Width="110" Margin="0,0,0,5" Grid.Column="1"/>
+                <TextBox VerticalScrollBarVisibility="Auto" TextWrapping="Wrap" Text="{Binding Logger}" Margin="0,28,0,35" Grid.Column="1" BorderBrush="#FFA0A0A0" />
+                <Border Margin="0,28,5,35" BorderThickness="1" BorderBrush="#FFA0A0A0">
+                    <ListBox ItemsSource="{Binding DuplicatedTestCase}" SelectedItem="{Binding SelectedMapping}" >
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="Old ID: "/>
+                                    <TextBlock Text="{Binding OldID}"/>
+                                    <TextBlock Text=" - "/>
+                                    <TextBlock Text="New ID: "/>
+                                    <TextBlock Text="{Binding NewID}"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </Border>
+                <Label Content="Completed Items Mapping" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                <Label Content="Logger" Grid.Column="1" HorizontalAlignment="Left" Margin="10,0,0,0" VerticalAlignment="Top"/>
+                <Button Content="Delete" HorizontalAlignment="Right" Margin="0,0,10,5" Command="{Binding DeleteMappingCommand}" VerticalAlignment="Bottom" Width="75"/>
+            </Grid>
+        </GroupBox>
+    </Grid>
+</controls:MetroWindow>
