@@ -6,7 +6,7 @@
     <Grid>
         <TextBlock HorizontalAlignment="Left" Margin="10,0,0,10" TextWrapping="Wrap" Text="Developed By Shai Raiten" VerticalAlignment="Bottom"/>
         <TextBlock HorizontalAlignment="Left" Margin="10,10,0,0" TextWrapping="Wrap" Text="Test Case Copy Tool" VerticalAlignment="Top" FontSize="22" FontWeight="Bold"/>
-        <TextBlock HorizontalAlignment="Left" Margin="10,62,0,0" TextWrapping="Wrap" Text="MTM Copy Tool is a newer version of Test Case Migrator Tool that can copy and cloning Test Suites and Tests over Team Projects and Team Collections." VerticalAlignment="Top"/>
+        <TextBlock HorizontalAlignment="Left" Margin="10,62,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top"/>
         <Label Cursor="Hand" Content="http://blogs.microsoft.co.il/blogs/shair" HorizontalAlignment="Right" Margin="0,0,10,5" VerticalAlignment="Bottom" Foreground="#FF005DFF" MouseLeftButtonDown="Label_MouseLeftButtonDown"/>
 
     </Grid>

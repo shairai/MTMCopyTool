@@ -28,15 +28,13 @@ namespace MTMCopyTool.ViewModels
         }
         public ICommand CreateTestPlanCommand { get; private set; }
         public ObservableCollection<TestObjectViewModel> TestPlans { get; set; }
+        public TestObjectViewModel TargetTestPlan { get; set; }
 
         public TreeView tree { get; set; }
-        private OptionsViewModel options;
         public MappingViewModel(TreeView _tree)
         {
-            tree = _tree;
-
             TestPlans = new ObservableCollection<TestObjectViewModel>();
-            
+            tree = _tree;
             TfsShared.Instance.Connected += Instance_Connected;
 
             CreateTestPlanCommand = new DelegateCommand(CreatePlan, CanWork);
@@ -74,7 +72,7 @@ namespace MTMCopyTool.ViewModels
 
                 App.Current.Dispatcher.Invoke(() =>
                 {
-                    TestPlans.Add(new TestObjectViewModel(plan.RootSuite, false));
+                    TestPlans.Add(new TestObjectViewModel(plan.RootSuite));
                 });
 
                 Working = false;
@@ -95,9 +93,9 @@ namespace MTMCopyTool.ViewModels
 
             List<TestObjectViewModel> plansCollection = await Task.Run(() =>
                {
-
+                   
                    var plans = TfsShared.Instance.TargetTestProject.TestPlans.Query("Select * From TestPlan");
-                   List<TestObjectViewModel> rootItems = plans.Select(plan => new TestObjectViewModel(plan.RootSuite, false)).ToList();
+                   List<TestObjectViewModel> rootItems = plans.Select(plan => new TestObjectViewModel(plan.RootSuite)).OrderBy(n=>n.Name).ToList();
 
                    App.Current.Dispatcher.Invoke(() =>
                    {
@@ -128,11 +126,11 @@ namespace MTMCopyTool.ViewModels
 
             App.Current.Dispatcher.Invoke(() =>
             {
-                tree.ItemsSource = plansCollection;
+                tree.ItemsSource = plansCollection.OrderBy(n => n.Name);
             });
 
             Working = false;
-        }
+        }        
 
         private string _testPlanName;
         public string TestPlanName

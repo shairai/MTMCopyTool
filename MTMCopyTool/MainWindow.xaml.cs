@@ -15,14 +15,13 @@ namespace MTMCopyTool
 
             App.Current.DispatcherUnhandledException += App_DispatcherUnhandledException;
 
-            OptionsViewModel optionsViewModel = new OptionsViewModel();
             MappingViewModel mappingViewModel = new MappingViewModel(plansTree);
             ConnectionsViewModel connectionsViewModel = new ConnectionsViewModel();
 
-            gp_options.DataContext = optionsViewModel;
             gp_copy.DataContext = mappingViewModel;
             gp_connections.DataContext = connectionsViewModel;
-            gp_settings.DataContext = new SettingsViewModel(mappingViewModel, optionsViewModel);
+
+            gp_settings.DataContext = new SettingsViewModel(mappingViewModel);
         }
 
         void App_DispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)

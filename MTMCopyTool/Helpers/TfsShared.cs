@@ -6,7 +6,6 @@ using Microsoft.TeamFoundation.TestManagement.Client;
 using Microsoft.TeamFoundation.Server;
 using System.Threading.Tasks;
 using Microsoft.TeamFoundation.WorkItemTracking.Client;
-using MTMCopyTool.Properties;
 
 namespace MTMCopyTool.Helpers
 {
@@ -50,26 +49,26 @@ namespace MTMCopyTool.Helpers
                 {
 
                     string tfsUrl = tpp.SelectedTeamProjectCollection.Uri.AbsoluteUri;
-                    Settings.Default.SourceTFS = tfsUrl;
+                    Properties.Settings.Default.SourceTFS = tfsUrl;
 
                     string projectName = tpp.SelectedProjects[0].Name;
-                    Settings.Default.SourceProject = projectName;
-                    Settings.Default.Save();
+                    Properties.Settings.Default.SourceProject = projectName;
+                    Properties.Settings.Default.Save();
 
-                    await Connect(tfsUrl, projectName, true, false);
+                    await Connect(tfsUrl, projectName, true);
 
                     Connected(this, new ConnectionArgs() { IsSource = true, Success = true });
                 }
                 else
                 {
                     string tfsUrl = tpp.SelectedTeamProjectCollection.Uri.AbsoluteUri;
-                    Settings.Default.TargetTFS = tfsUrl;
+                    Properties.Settings.Default.TargetTFS = tfsUrl;
 
                     string projectName = tpp.SelectedProjects[0].Name;
-                    Settings.Default.TargetProject = projectName;
-                    Settings.Default.Save();
+                    Properties.Settings.Default.TargetProject = projectName;
+                    Properties.Settings.Default.Save();
 
-                    await Connect(tfsUrl, projectName, false, Settings.Default.BypassRules);
+                    await Connect(tfsUrl, projectName, false);
 
                     Connected(this, new ConnectionArgs() { IsSource = false, Success = true });
                 }
@@ -80,7 +79,7 @@ namespace MTMCopyTool.Helpers
             }
         }
 
-        private async Task Connect(string tfsUrl, string projectName, bool source, bool bypassRules)
+        private async Task Connect(string tfsUrl, string projectName, bool source)
         {
             await Task.Factory.StartNew(() =>
             {
@@ -106,33 +105,14 @@ namespace MTMCopyTool.Helpers
                         Uri = TargetTestProject.WitProject.Uri.AbsoluteUri
                     };
 
-                    WorkItemStore store = new WorkItemStore(TargetTFS, bypassRules ? WorkItemStoreFlags.BypassRules : WorkItemStoreFlags.None);
+                    WorkItemStore store = new WorkItemStore(TargetTFS);
 
                     TargetProjectWorkItemType = store.Projects[projectName].WorkItemTypes["Test Case"];
                 }
             });
         }
 
-        public void Disconnect(bool source)
-        {
-            if (source)
-            {
-                SourceProject = null;
-                SourceTFS = null;
-                SourceTestProject = null;
-                Connected(this, new ConnectionArgs() { IsSource = true, Success = false });
-            }
-            else
-            {
-                TargetProject = null;
-                TargetTFS = null;
-                TargetTestProject = null;
-                TargetProjectWorkItemType = null;
-                Connected(this, new ConnectionArgs() { IsSource = false, Success = false });
-            }
-        }
-
-        public async void Connect(bool source, bool bypassRules = false)
+        public async void Connect(bool source)
         {
             if (source)
             {
@@ -141,7 +121,7 @@ namespace MTMCopyTool.Helpers
                 else
                 {
                     await
-                        Connect(Properties.Settings.Default.SourceTFS, Properties.Settings.Default.SourceProject, true, false);
+                        Connect(Properties.Settings.Default.SourceTFS, Properties.Settings.Default.SourceProject, true);
                     Connected(this, new ConnectionArgs() { IsSource = true, Success = true });
                 }
             }
@@ -151,7 +131,7 @@ namespace MTMCopyTool.Helpers
                     OpenTeamProjectPicker(false);
                 else
                 {
-                    await Connect(Properties.Settings.Default.TargetTFS, Properties.Settings.Default.TargetProject, false, bypassRules);
+                    await Connect(Properties.Settings.Default.TargetTFS, Properties.Settings.Default.TargetProject, false);
                     Connected(this, new ConnectionArgs() { IsSource = false, Success = true });
                 }
             }
