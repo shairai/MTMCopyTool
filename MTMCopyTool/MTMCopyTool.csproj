@@ -80,14 +80,15 @@
     <Compile Include="Controls\ExceptionDetails.xaml.cs">
       <DependentUpon>ExceptionDetails.xaml</DependentUpon>
     </Compile>
-    <Compile Include="DataModel\TestCaseViewModel.cs" />
     <Compile Include="DataModel\TestObject.cs" />
     <Compile Include="DataModel\TestObjectType.cs" />
     <Compile Include="DataModel\TestObjectViewModel.cs" />
+    <Compile Include="DataModel\TestOutcomeFilter.cs" />
     <Compile Include="DataModel\TestResultView.cs" />
     <Compile Include="DataModel\TreeViewItemViewModel.cs" />
     <Compile Include="Helpers\TestHelper.cs" />
     <Compile Include="Helpers\TfsShared.cs" />
+    <Compile Include="ViewModels\OptionsViewModel.cs" />
     <Compile Include="ViewModels\SettingsViewModel.cs" />
     <Compile Include="ViewModels\MappingViewModel.cs" />
     <Compile Include="ViewModels\ConnectionsViewModel.cs" />
@@ -177,6 +178,10 @@
     <Resource Include="Images\TestCase.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>
+    </PostBuildEvent>
+  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

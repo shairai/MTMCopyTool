@@ -1,0 +1,54 @@
+C:\New folder\Trunk\MTMCopyTool\MTMCopyTool\bin\Debug\TestCaseCopyTool.exe.config
+C:\New folder\Trunk\MTMCopyTool\MTMCopyTool\bin\Debug\TestCaseCopyTool.exe
+C:\New folder\Trunk\MTMCopyTool\MTMCopyTool\bin\Debug\TestCaseCopyTool.pdb
+C:\New folder\Trunk\MTMCopyTool\MTMCopyTool\bin\Debug\MahApps.Metro.dll
+C:\New folder\Trunk\MTMCopyTool\MTMCopyTool\bin\Debug\Newtonsoft.Json.dll
+C:\New folder\Trunk\MTMCopyTool\MTMCopyTool\bin\Debug\System.Windows.Interactivity.dll
+C:\New folder\Trunk\MTMCopyTool\MTMCopyTool\bin\Debug\Microsoft.TeamFoundation.WorkItemTracking.Client.DataStoreLoader.dll
+C:\New folder\Trunk\MTMCopyTool\MTMCopyTool\bin\Debug\MahApps.Metro.xml
+C:\New folder\Trunk\MTMCopyTool\MTMCopyTool\bin\Debug\Newtonsoft.Json.xml
+C:\New folder\Trunk\MTMCopyTool\MTMCopyTool\bin\Debug\Microsoft.WITDataStore.dll
+C:\New folder\Trunk\MTMCopyTool\MTMCopyTool\obj\Debug\MTMCopyTool.csprojResolveAssemblyReference.cache
+C:\New folder\Trunk\MTMCopyTool\MTMCopyTool\obj\Debug\Controls\About.baml
+C:\New folder\Trunk\MTMCopyTool\MTMCopyTool\obj\Debug\Controls\ExceptionDetails.baml
+C:\New folder\Trunk\MTMCopyTool\MTMCopyTool\obj\Debug\MainWindow.baml
+C:\New folder\Trunk\MTMCopyTool\MTMCopyTool\obj\Debug\Resources\Icons.baml
+C:\New folder\Trunk\MTMCopyTool\MTMCopyTool\obj\Debug\Resources\ToolTipStyle.baml
+C:\New folder\Trunk\MTMCopyTool\MTMCopyTool\obj\Debug\App.baml
+C:\New folder\Trunk\MTMCopyTool\MTMCopyTool\obj\Debug\Controls\About.g.cs
+C:\New folder\Trunk\MTMCopyTool\MTMCopyTool\obj\Debug\Controls\ExceptionDetails.g.cs
+C:\New folder\Trunk\MTMCopyTool\MTMCopyTool\obj\Debug\MainWindow.g.cs
+C:\New folder\Trunk\MTMCopyTool\MTMCopyTool\obj\Debug\App.g.cs
+C:\New folder\Trunk\MTMCopyTool\MTMCopyTool\obj\Debug\TestCaseCopyTool_MarkupCompile.cache
+C:\New folder\Trunk\MTMCopyTool\MTMCopyTool\obj\Debug\TestCaseCopyTool.g.resources
+C:\New folder\Trunk\MTMCopyTool\MTMCopyTool\obj\Debug\MTMCopyTool.Properties.Resources.resources
+C:\New folder\Trunk\MTMCopyTool\MTMCopyTool\obj\Debug\MTMCopyTool.csproj.GenerateResource.Cache
+C:\New folder\Trunk\MTMCopyTool\MTMCopyTool\obj\Debug\TestCaseCopyTool.exe
+C:\New folder\Trunk\MTMCopyTool\MTMCopyTool\obj\Debug\TestCaseCopyTool.pdb
+C:\CodePlex\MTMCopyTool\MTMCopyTool\bin\Debug\TestCaseCopyTool.exe.config
+C:\CodePlex\MTMCopyTool\MTMCopyTool\obj\Debug\TestCaseCopyTool.exe
+C:\CodePlex\MTMCopyTool\MTMCopyTool\obj\Debug\TestCaseCopyTool.pdb
+C:\CodePlex\MTMCopyTool\MTMCopyTool\bin\Debug\TestCaseCopyTool.exe
+C:\CodePlex\MTMCopyTool\MTMCopyTool\bin\Debug\TestCaseCopyTool.pdb
+C:\CodePlex\MTMCopyTool\MTMCopyTool\bin\Debug\MahApps.Metro.dll
+C:\CodePlex\MTMCopyTool\MTMCopyTool\bin\Debug\Newtonsoft.Json.dll
+C:\CodePlex\MTMCopyTool\MTMCopyTool\bin\Debug\System.Windows.Interactivity.dll
+C:\CodePlex\MTMCopyTool\MTMCopyTool\bin\Debug\Microsoft.TeamFoundation.WorkItemTracking.Client.DataStoreLoader.dll
+C:\CodePlex\MTMCopyTool\MTMCopyTool\bin\Debug\MahApps.Metro.xml
+C:\CodePlex\MTMCopyTool\MTMCopyTool\bin\Debug\Newtonsoft.Json.xml
+C:\CodePlex\MTMCopyTool\MTMCopyTool\bin\Debug\Microsoft.WITDataStore.dll
+C:\CodePlex\MTMCopyTool\MTMCopyTool\obj\Debug\Controls\About.baml
+C:\CodePlex\MTMCopyTool\MTMCopyTool\obj\Debug\Controls\ExceptionDetails.baml
+C:\CodePlex\MTMCopyTool\MTMCopyTool\obj\Debug\MainWindow.baml
+C:\CodePlex\MTMCopyTool\MTMCopyTool\obj\Debug\Resources\Icons.baml
+C:\CodePlex\MTMCopyTool\MTMCopyTool\obj\Debug\Resources\ToolTipStyle.baml
+C:\CodePlex\MTMCopyTool\MTMCopyTool\obj\Debug\App.baml
+C:\CodePlex\MTMCopyTool\MTMCopyTool\obj\Debug\Controls\About.g.cs
+C:\CodePlex\MTMCopyTool\MTMCopyTool\obj\Debug\Controls\ExceptionDetails.g.cs
+C:\CodePlex\MTMCopyTool\MTMCopyTool\obj\Debug\MainWindow.g.cs
+C:\CodePlex\MTMCopyTool\MTMCopyTool\obj\Debug\App.g.cs
+C:\CodePlex\MTMCopyTool\MTMCopyTool\obj\Debug\TestCaseCopyTool_MarkupCompile.cache
+C:\CodePlex\MTMCopyTool\MTMCopyTool\obj\Debug\TestCaseCopyTool.g.resources
+C:\CodePlex\MTMCopyTool\MTMCopyTool\obj\Debug\MTMCopyTool.Properties.Resources.resources
+C:\CodePlex\MTMCopyTool\MTMCopyTool\obj\Debug\MTMCopyTool.csproj.GenerateResource.Cache
+C:\CodePlex\MTMCopyTool\MTMCopyTool\obj\Debug\MTMCopyTool.csprojResolveAssemblyReference.cache

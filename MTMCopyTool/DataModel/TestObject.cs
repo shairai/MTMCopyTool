@@ -1,4 +1,6 @@
-﻿using Microsoft.TeamFoundation.TestManagement.Client;
+﻿using System.Collections.Generic;
+using System.Windows.Documents;
+using Microsoft.TeamFoundation.TestManagement.Client;
 
 namespace MTMCopyTool.DataModel
 {
@@ -21,8 +23,9 @@ namespace MTMCopyTool.DataModel
         public string Name { get; set; }
         public int ID { get; set; }
         public int TestPlanID { get; set; }
+        public IList<IdAndName> Configurations { get; set; }
         public string TestCaseCount { get; set; }
-
+        public TestOutcome LastTestOutcome { get; set; }
         public ITestSuiteBase TestSuiteBase { get; set; }
 
         public ITestSuiteEntry TestSuite { get; set; }
