@@ -15,10 +15,11 @@ namespace MTMCopyTool.Helpers
             get { return _instance ?? (_instance = new TestHelper()); }
         }
 
-        public TestOutcome GetLastTestOutcome(ITestSuiteEntry testCase, int configurationId)
+        public TestOutcome GetLastTestOutcome(int testPlanId, int suiteId, int testId ,int configurationId)
         {
-            ITestPointCollection tpc = testCase.ParentTestSuite.Plan.QueryTestPoints("SELECT * FROM TestPoint WHERE SuiteId = " + testCase.ParentTestSuite.Id);
-            var testPoints = tpc.FirstOrDefault(t => t.TestCaseId.Equals(testCase.Id) && t.ConfigurationId.Equals(configurationId));
+            ITestPlan plan = TfsShared.Instance.SourceTestProject.TestPlans.Find(testPlanId);
+            ITestPointCollection tpc = plan.QueryTestPoints("SELECT * FROM TestPoint WHERE SuiteId = " + suiteId);
+            var testPoints = tpc.FirstOrDefault(t => t.TestCaseId.Equals(testId) && t.ConfigurationId.Equals(configurationId));
 
             if (testPoints == null) return TestOutcome.None;
 

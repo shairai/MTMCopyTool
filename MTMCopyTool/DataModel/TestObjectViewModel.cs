@@ -12,17 +12,19 @@ namespace MTMCopyTool.DataModel
     public class TestObjectViewModel : TreeViewItemViewModel
     {
         public TestObject _testObject { get; set; }
-
-        public TestObjectViewModel(ITestSuiteBase testSuite)
+        private bool _includeTests;
+        public IdAndName Configuration { get; set; }
+        public TestObjectViewModel(ITestSuiteBase testSuite, bool includeTests = true)
             : base(null, true)
         {
+            _includeTests = includeTests;
             _testObject = new TestObject(testSuite.Title, testSuite.Id, TestObjectType.Suite);
             _testObject.TestSuiteBase = testSuite;
             _testObject.TestPlanID = testSuite.Plan.Id;
 
             StructureFlow += ";" + testSuite.ToString();
 
-            CanChecked = testSuite.TestSuiteType == TestSuiteType.StaticTestSuite;
+            CanChecked = testSuite.TestSuiteType == TestSuiteType.StaticTestSuite || testSuite.TestSuiteType == TestSuiteType.RequirementTestSuite;
 
             Thread t = new Thread(new ThreadStart(GetInternalTestCaseDetails));
             t.Start();
@@ -32,7 +34,6 @@ namespace MTMCopyTool.DataModel
             : base(null, true)
         {
             _testObject = new TestObject("N/A", 0);
-
         }
 
         public TestObjectViewModel(ITestSuiteEntry test)
@@ -40,6 +41,8 @@ namespace MTMCopyTool.DataModel
         {
             _testObject = new TestObject(test.Title, test.Id, TestObjectType.Test);
             CanChecked = true;
+            _testObject.TestPlanID = test.ParentTestSuite.Plan.Id;
+            _testObject.Configurations = test.Configurations;
             _testObject.TestSuite = test;
         }
 
@@ -112,20 +115,31 @@ namespace MTMCopyTool.DataModel
         public TestObjectType Type
         {
             get { return _testObject.Type; }
-        }
+        }       
 
         protected override void LoadChildren()
         {
             if (_testObject.TestSuiteBase != null)
             {
-                if (_testObject.TestSuiteBase.TestSuiteType == TestSuiteType.StaticTestSuite)
+                if (_testObject.TestSuiteBase.TestSuiteType == TestSuiteType.StaticTestSuite || _testObject.TestSuiteBase.TestSuiteType == TestSuiteType.RequirementTestSuite)
                 {
-                    var staticSuite = (IStaticTestSuite)_testObject.TestSuiteBase;
-                    foreach (ITestSuiteBase suite in staticSuite.SubSuites.OrderBy(t=>t.Title))
-                        base.Children.Add(new TestObjectViewModel(suite) { Parent = this, StructureFlow = ID.ToString(), IsChecked = this.IsChecked });
+                    if (_testObject.TestSuiteBase.TestSuiteType == TestSuiteType.RequirementTestSuite)
+                    {
+                        var reqSuite = (IRequirementTestSuite)_testObject.TestSuiteBase;
+                        if (!_includeTests) return;
+                        foreach (ITestSuiteEntry test in reqSuite.TestCases)
+                            base.Children.Add(new TestObjectViewModel(test) { Parent = this, TestSuiteId = reqSuite.Id, StructureFlow = ID.ToString(CultureInfo.InvariantCulture), IsChecked = this.IsChecked });
+                    }
+                    else
+                    {
+                        var staticSuite = (IStaticTestSuite)_testObject.TestSuiteBase;
+                        foreach (ITestSuiteBase suite in staticSuite.SubSuites)
+                            base.Children.Add(new TestObjectViewModel(suite, _includeTests) { Parent = this, StructureFlow = ID.ToString(), IsChecked = this.IsChecked });
 
-                    foreach (ITestSuiteEntry test in staticSuite.TestCases.OrderBy(t => t.Title))
-                        base.Children.Add(new TestObjectViewModel(test) { Parent = this, TestSuiteId = staticSuite.Id, StructureFlow = ID.ToString(CultureInfo.InvariantCulture), IsChecked = this.IsChecked });
+                        if (!_includeTests) return;
+                        foreach (ITestSuiteEntry test in staticSuite.TestCases)
+                            base.Children.Add(new TestObjectViewModel(test) { Parent = this, TestSuiteId = staticSuite.Id, StructureFlow = ID.ToString(CultureInfo.InvariantCulture), IsChecked = this.IsChecked });
+                    }
                 }
             }
         }
