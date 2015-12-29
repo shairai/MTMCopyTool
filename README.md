@@ -38,6 +38,7 @@ MTM Copy Tool is a newer version of Test Case Migrator Tool that can copy and cl
 ## History
 
 11/12/2014 - Add Initial Project
+01/03/2015 - Updates for TFS 2013/2015
 
 ## Credits
 
