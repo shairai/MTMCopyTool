@@ -115,7 +115,7 @@ namespace MTMCopyTool.ViewModels
             List<TestOutcomeFilter> selectedOutcomes = _options.TestOutcomeFilters.Where(t => t.IsSelected).ToList();
 
             TestObjectViewModel selectedSuite = null;
-            selectedSuite = HasSelectedItem(_mappingViewModel.TestPlans, selectedSuite);
+            selectedSuite = HasSelectedItem(_mappingViewModel.TestPlans, selectedSuite);//Selected Target project Suit.
             if (_mappingViewModel.tree.Items.Count == 0 || selectedSuite == null)
             {
                 MessageBox.Show("Please select suites & test cases to copy and target test plan.", "Missing Data",
@@ -130,7 +130,8 @@ namespace MTMCopyTool.ViewModels
             var firsetLevel = new List<TestObjectViewModel>();
             foreach (TestObjectViewModel item in _mappingViewModel.tree.Items)
             {
-                firsetLevel.Add(item);
+                if(item.IsChecked)
+                firsetLevel.Add(item);//Source Project all test plan
             }
 
             List<TestObjectViewModel> selectedItems = null;
@@ -199,45 +200,50 @@ namespace MTMCopyTool.ViewModels
 
                         ITestCase testCase = TfsShared.Instance.SourceTestProject.TestCases.Find(test.ID);
                         WorkItem targetWorkItem = null;
+                        #region Create duplicate test cases
                         if (duplicate)
                         {
                             WorkItem duplicateWorkItem = null;
                             if (!DuplicatedTestCase.Any(t => t.OldID.Equals(test.ID)))
                             {
-                                duplicateWorkItem = testCase.WorkItem.Copy(TfsShared.Instance.TargetProjectWorkItemType,
-                                    WorkItemCopyFlags.CopyFiles);
-                                duplicateWorkItem.WorkItemLinks.Clear();
-
-                                if (!duplicateWorkItem.IsValid())
+                                if ((sourceSuite.TestSuiteType != TestSuiteType.RequirementTestSuite) && (sourceSuite.TestSuiteType != TestSuiteType.DynamicTestSuite))
                                 {
-                                    Logger = "Cannot Save Work Item - Stoping Migration\n" + Logger;
-                                    ArrayList badFields = duplicateWorkItem.Validate();
-                                    foreach (Field field in badFields)
-                                    {
-                                        Logger =
-                                            string.Format("Name: {0}, Reference Name: {1},  Invalid Value: {2}\n",
-                                                field.Name, field.ReferenceName, field.Value) + Logger;
-                                    }
 
-                                    break;
-                                }
-                                else
-                                {
-                                    duplicateWorkItem.Save();
+                                    duplicateWorkItem = testCase.WorkItem.Copy(TfsShared.Instance.TargetProjectWorkItemType,
+                                        WorkItemCopyFlags.CopyFiles);
+                                    //duplicateWorkItem.WorkItemLinks.Clear();
 
-                                    App.Current.Dispatcher.Invoke(() =>
+                                    if (!duplicateWorkItem.IsValid())
                                     {
-                                        DuplicatedTestCase.Add(new TestCaseOldNewMapping()
+                                        Logger = "Cannot Save Work Item - Stoping Migration\n" + Logger;
+                                        ArrayList badFields = duplicateWorkItem.Validate();
+                                        foreach (Field field in badFields)
                                         {
-                                            OldID = testCase.Id,
-                                            NewID = duplicateWorkItem.Id
-                                        });
-                                    });
+                                            Logger =
+                                                string.Format("Name: {0}, Reference Name: {1},  Invalid Value: {2}\n",
+                                                    field.Name, field.ReferenceName, field.Value) + Logger;
+                                        }
 
-                                    Logger =
-                                        string.Format("Duplicate Test Case: {0} completed, new Test Case ID: {1}\n",
-                                            test.ID,
-                                            duplicateWorkItem.Id) + Logger;
+                                        break;
+                                    }
+                                    else
+                                    {
+                                        duplicateWorkItem.Save();
+
+                                        App.Current.Dispatcher.Invoke(() =>
+                                        {
+                                            DuplicatedTestCase.Add(new TestCaseOldNewMapping()
+                                            {
+                                                OldID = testCase.Id,
+                                                NewID = duplicateWorkItem.Id
+                                            });
+                                        });
+
+                                        Logger =
+                                            string.Format("Duplicate Test Case: {0} completed, new Test Case ID: {1}\n",
+                                                test.ID,
+                                                duplicateWorkItem.Id) + Logger;
+                                    }
                                 }
                             }
                             else
@@ -257,7 +263,7 @@ namespace MTMCopyTool.ViewModels
                         }
                         else
                             targetWorkItem = testCase.WorkItem;
-
+                        #endregion
                         ITestSuiteBase suite = sourceSuite;
                         while (suite != null)
                         {
@@ -265,42 +271,89 @@ namespace MTMCopyTool.ViewModels
                             suite = suite.TestSuiteEntry.ParentTestSuite;
                         }
 
-                        parentTestSuites.Pop();
+                        parentTestSuites.Pop();//Source tree parent suites
 
-                        var parentSuite = (IStaticTestSuite)selectedSuite._testObject.TestSuiteBase;
+                        var parentSuite = (IStaticTestSuite)selectedSuite._testObject.TestSuiteBase;//Selected target suite
+                        bool isTestCaseParentRequirementTestSuite = false;
+                        bool isTestCaseParentDynamicTestSuite = false;
                         foreach (ITestSuiteBase testSuite in parentTestSuites)
                         {
-                            ITestSuiteEntry existingSuite =
-                                parentSuite.Entries.FirstOrDefault(s => s.Title.Equals(testSuite.Title));
-                            if (existingSuite == null)
+                            ITestSuiteBase existingSuite =null;
+                            isTestCaseParentRequirementTestSuite = false;
+                            isTestCaseParentDynamicTestSuite = false;
+                            if (testSuite.TestSuiteType == TestSuiteType.RequirementTestSuite)
+                                isTestCaseParentRequirementTestSuite = true;
+                            if (testSuite.TestSuiteType == TestSuiteType.DynamicTestSuite)
+                                isTestCaseParentDynamicTestSuite = true;
+
+                            if (parentSuite.Title.Equals(testSuite.Title))
+                            {
+                                existingSuite = parentSuite;
+                            }
+                            else if (parentSuite.SubSuites.FirstOrDefault(t => t.Title.Equals(testSuite.Title)) != null) {
+                                var subSuite = parentSuite.SubSuites.FirstOrDefault(t => t.Title.Equals(testSuite.Title));
+                                
+                                if(subSuite.TestSuiteType==TestSuiteType.StaticTestSuite)
+                                    parentSuite = (IStaticTestSuite)parentSuite.SubSuites.FirstOrDefault(t => t.Title.Equals(testSuite.Title));
+                                    continue;
+                            }
+                           if (existingSuite == null)
                             {
                                 Logger = "Creating new suite called - " + testSuite.Title + "\n" + Logger;
-                                IStaticTestSuite newSuite =
-                                    TfsShared.Instance.TargetTestProject.TestSuites.CreateStatic();
-                                newSuite.Title = testSuite.Title;
-                                newSuite.State = testSuite.State;
-                                newSuite.Description = testSuite.Description;
 
-                                parentSuite.Entries.Add(newSuite);
-                                parentSuite = newSuite;
+
+                                #region New Feature
+                                switch (testSuite.TestSuiteType) {
+                                    case TestSuiteType.RequirementTestSuite:
+                                            var store = ((IRequirementTestSuite)testSuite).Project.WitProject.Store;
+                                            var tfsRequirement = store.GetWorkItem(((IRequirementTestSuite)testSuite).RequirementId);
+                                            IRequirementTestSuite newRequirementSuite = TfsShared.Instance.TargetTestProject.TestSuites.CreateRequirement(tfsRequirement);
+                                        
+
+                                        newRequirementSuite.Title = testSuite.Title;
+                                            newRequirementSuite.Description = testSuite.Description;
+                                            newRequirementSuite.State = testSuite.State;
+                                            tfsRequirement.Save();
+                                            parentSuite.Entries.Add(newRequirementSuite);
+                                        break;
+                                    case TestSuiteType.StaticTestSuite:
+                                            IStaticTestSuite newStaticSuite = TfsShared.Instance.TargetTestProject.TestSuites.CreateStatic();
+                                            newStaticSuite.Title = testSuite.Title;
+                                            newStaticSuite.State = testSuite.State;
+                                            newStaticSuite.Description = testSuite.Description;
+
+                                            parentSuite.Entries.Add(newStaticSuite);
+                                            parentSuite = newStaticSuite;
+                                        break;
+                                    case TestSuiteType.DynamicTestSuite:
+                                            IDynamicTestSuite newDynamicSuite = TfsShared.Instance.TargetTestProject.TestSuites.CreateDynamic();
+                                            newDynamicSuite.Query= TfsShared.Instance.TargetTestProject.CreateTestQuery(((IDynamicTestSuite)testSuite).Query.QueryText);
+                                            newDynamicSuite.Title = testSuite.Title;
+                                            newDynamicSuite.State = testSuite.State;
+                                            newDynamicSuite.Description = testSuite.Description;
+                                            parentSuite.Entries.Add(newDynamicSuite);
+                                        break;
+                                }
+                                #endregion
                             }
                             else
                             {
                                 Logger = string.Format("Suite '{0}' already exists.\n{1}", existingSuite.Title, Logger);
-                                parentSuite = existingSuite.TestSuite as IStaticTestSuite;
                             }
 
                             plan.Save();
                         }
-
-                        ITestCase targetTestCase =
-                            TfsShared.Instance.TargetTestProject.TestCases.Find(targetWorkItem.Id);
-                        if (!parentSuite.Entries.Contains(targetTestCase))
+                        if ((parentSuite.TestSuiteType == TestSuiteType.StaticTestSuite) && (isTestCaseParentRequirementTestSuite==false) && (isTestCaseParentDynamicTestSuite == false))
                         {
-                            
-                            ITestSuiteEntry entry =  parentSuite.Entries.Add(targetTestCase);
-                            entry.Configurations.Add(test.Configuration);
-                            Logger = "Adding duplicated test case completed.\n" + Logger;
+                            ITestCase targetTestCase =
+                            TfsShared.Instance.TargetTestProject.TestCases.Find(targetWorkItem.Id);
+                            if (!parentSuite.Entries.Contains(targetTestCase))
+                            {
+
+                                ITestSuiteEntry entry = parentSuite.Entries.Add(targetTestCase);
+                                entry.Configurations.Add(test.Configuration);
+                                Logger = "Adding duplicated test case completed.\n" + Logger;
+                            }
                         }
                     }
                 }
@@ -335,37 +388,56 @@ namespace MTMCopyTool.ViewModels
                     }
                     else
                     {
-                        testCases = RecursiveSuiteCollector(suite as IStaticTestSuite, new List<TestObjectViewModel>());
+                        testCases = RecursiveSuiteCollector(item, suite as IStaticTestSuite, new List<TestObjectViewModel>());
                     }
 
                     selectedItems.AddRange(testCases);
                 }
 
-                if (item.Children.Count > 0 && item.Children.All(i => i.ID != 0))
-                {
-                    selectedItems = GetSelectedSuitesAndTests(item.Children, selectedItems);
-                }
+                //if (item.Children.Count > 0 && item.Children.All(i => i.ID != 0))
+                //{
+                  //  selectedItems = GetSelectedSuitesAndTests(item.Children, selectedItems);
+                //}
             }
             return selectedItems;
         }
-
-        private List<TestObjectViewModel> RecursiveSuiteCollector(IStaticTestSuite suite,
-            List<TestObjectViewModel> selectedItems)
+        private List<TestObjectViewModel> RecursiveSuiteCollector(TestObjectViewModel item, ITestSuiteBase suite,
+          List<TestObjectViewModel> selectedItems)
         {
-            selectedItems.AddRange(suite.TestCases.Select(test => new TestObjectViewModel(test) { TestSuiteId = suite.Id }));
-
-            if (suite.SubSuites.Count > 0)
+            IStaticTestSuite staticSuite = null;
+            IDynamicTestSuite dynamicSuite = null;
+            IRequirementTestSuite requirmentSuite = null;
+            ITestSuiteBase suiteBase = TfsShared.Instance.SourceTestProject.TestSuites.Find(item.ID);
+            if (suiteBase.TestSuiteType == TestSuiteType.StaticTestSuite)
             {
-                foreach (ITestSuiteBase subSuite in suite.SubSuites)
+                staticSuite = (IStaticTestSuite)suiteBase;
+                if (item.IsChecked)
                 {
-                    if (subSuite.TestSuiteType != TestSuiteType.StaticTestSuite) continue;
-                    RecursiveSuiteCollector(subSuite as IStaticTestSuite, selectedItems);
+                    selectedItems.AddRange(staticSuite.TestCases.Select(test => new TestObjectViewModel(test) { TestSuiteId = suite.Id }));
+                    if (staticSuite.SubSuites.Count > 0)
+                    {
+                        foreach (ITestSuiteBase subSuite in staticSuite.SubSuites)
+                        {
+                            var children = item.Children.Where(t => t.ID > 0 && t.ID == subSuite.Id);
+                            if(children.Count()>0)
+                            RecursiveSuiteCollector(children.First(), subSuite, selectedItems);
+                        }
+                    }
                 }
+            }
+            else if ((suite.TestSuiteType == TestSuiteType.DynamicTestSuite) && (item.IsChecked))
+            {
+                dynamicSuite = (IDynamicTestSuite)suite;
+                selectedItems.AddRange(dynamicSuite.TestCases.Select(test => new TestObjectViewModel(test) { TestSuiteId = suite.Id }));
+            }
+            else if ((suite.TestSuiteType == TestSuiteType.RequirementTestSuite) && (item.IsChecked))
+            {
+                requirmentSuite = (IRequirementTestSuite)suite;
+                selectedItems.AddRange(requirmentSuite.TestCases.Select(test => new TestObjectViewModel(test) { TestSuiteId = suite.Id }));
             }
 
             return selectedItems;
         }
-
         private bool CanWork()
         {
             return !Working;

@@ -18,6 +18,8 @@ namespace MTMCopyTool.ViewModels
                 new TestOutcomeFilter() {TestOutcome = TestOutcome.Failed, IsSelected = true},
                 new TestOutcomeFilter() {TestOutcome = TestOutcome.Blocked, IsSelected = true},
                 new TestOutcomeFilter() {TestOutcome = TestOutcome.Unspecified, IsSelected = true},
+                new TestOutcomeFilter() {TestOutcome = TestOutcome.NotApplicable, IsSelected = true},
+                new TestOutcomeFilter() {TestOutcome = TestOutcome.NotExecuted, IsSelected = true}
             };
         }
 
