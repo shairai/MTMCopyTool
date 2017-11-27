@@ -19,7 +19,7 @@ namespace MTMCopyTool.ViewModels
 {
     public class SettingsViewModel : INotifyPropertyChanged
     {
-        private string _logger = "Log";
+        private string _logger = "";
         private readonly MappingViewModel _mappingViewModel;
         private bool _working;
         private OptionsViewModel _options;
@@ -28,10 +28,10 @@ namespace MTMCopyTool.ViewModels
         {
             _options = options;
 
-            DuplicatedTestCase =
-                JsonConvert.DeserializeObject<ObservableCollection<TestCaseOldNewMapping>>(Settings.Default.Mappings);
-            if (DuplicatedTestCase == null)
-                DuplicatedTestCase = new ObservableCollection<TestCaseOldNewMapping>();
+            //DuplicatedTestCase =
+            //    JsonConvert.DeserializeObject<ObservableCollection<TestCaseOldNewMapping>>(Settings.Default.Mappings);
+            //if (DuplicatedTestCase == null)
+            //    DuplicatedTestCase = new ObservableCollection<TestCaseOldNewMapping>();
             _mappingViewModel = mappingViewModel;
 
             StartMigrationCommand = new DelegateCommand(StartMigration, CanWork);
@@ -42,7 +42,7 @@ namespace MTMCopyTool.ViewModels
         public ICommand StartMigrationCommand { get; private set; }
         public ICommand DeleteMappingCommand { get; private set; }
 
-        public ObservableCollection<TestCaseOldNewMapping> DuplicatedTestCase { get; set; }
+        //public ObservableCollection<TestCaseOldNewMapping> DuplicatedTestCase { get; set; }
         public TestCaseOldNewMapping SelectedMapping { get; set; }
 
         public string Logger
@@ -83,16 +83,16 @@ namespace MTMCopyTool.ViewModels
             if (selectedList == null || selectedList.Count == 0) return;
             var itemsToDelete = selectedList.Cast<TestCaseOldNewMapping>().ToList();
 
-            App.Current.Dispatcher.Invoke(() =>
-            {
-                foreach (TestCaseOldNewMapping map in itemsToDelete)
-                {
-                    DuplicatedTestCase.Remove(map);
-                }
-            });
+            //App.Current.Dispatcher.Invoke(() =>
+            //{
+            //    foreach (TestCaseOldNewMapping map in itemsToDelete)
+            //    {
+            //        DuplicatedTestCase.Remove(map);
+            //    }
+            //});
 
-            Settings.Default.Mappings = JsonConvert.SerializeObject(DuplicatedTestCase);
-            Settings.Default.Save();
+            //Settings.Default.Mappings = JsonConvert.SerializeObject(DuplicatedTestCase);
+            //Settings.Default.Save();
         }
 
         private TestObjectViewModel HasSelectedItem(IEnumerable<TestObjectViewModel> suites,
@@ -174,8 +174,8 @@ namespace MTMCopyTool.ViewModels
             _mappingViewModel.Working = false;
             Working = false;
 
-            Settings.Default.Mappings = JsonConvert.SerializeObject(DuplicatedTestCase);
-            Settings.Default.Save();
+            //Settings.Default.Mappings = JsonConvert.SerializeObject(DuplicatedTestCase);
+            //Settings.Default.Save();
 
             Logger = "Copy Completed!\n" + Logger;
         }
@@ -204,8 +204,8 @@ namespace MTMCopyTool.ViewModels
                         if (duplicate)
                         {
                             WorkItem duplicateWorkItem = null;
-                            if (!DuplicatedTestCase.Any(t => t.OldID.Equals(test.ID)))
-                            {
+                            //if (!DuplicatedTestCase.Any(t => t.OldID.Equals(test.ID)))
+                            //{
                                 if ((sourceSuite.TestSuiteType != TestSuiteType.RequirementTestSuite) && (sourceSuite.TestSuiteType != TestSuiteType.DynamicTestSuite))
                                 {
 
@@ -230,14 +230,14 @@ namespace MTMCopyTool.ViewModels
                                     {
                                         duplicateWorkItem.Save();
 
-                                        App.Current.Dispatcher.Invoke(() =>
-                                        {
-                                            DuplicatedTestCase.Add(new TestCaseOldNewMapping()
-                                            {
-                                                OldID = testCase.Id,
-                                                NewID = duplicateWorkItem.Id
-                                            });
-                                        });
+                                        //App.Current.Dispatcher.Invoke(() =>
+                                        //{
+                                        //    DuplicatedTestCase.Add(new TestCaseOldNewMapping()
+                                        //    {
+                                        //        OldID = testCase.Id,
+                                        //        NewID = duplicateWorkItem.Id
+                                        //    });
+                                        //});
 
                                         Logger =
                                             string.Format("Duplicate Test Case: {0} completed, new Test Case ID: {1}\n",
@@ -245,19 +245,19 @@ namespace MTMCopyTool.ViewModels
                                                 duplicateWorkItem.Id) + Logger;
                                     }
                                 }
-                            }
-                            else
-                            {
-                                TestCaseOldNewMapping mapping =
-                                    DuplicatedTestCase.FirstOrDefault(t => t.OldID.Equals(test.ID));
-                                if (mapping == null) throw new NullReferenceException("Cannot locate new id");
-                                duplicateWorkItem =
-                                    TfsShared.Instance.TargetTestProject.TestCases.Find(mapping.NewID).WorkItem;
+                            //}
+                            //else
+                            //{
+                            //    TestCaseOldNewMapping mapping =
+                            //        DuplicatedTestCase.FirstOrDefault(t => t.OldID.Equals(test.ID));
+                            //    if (mapping == null) throw new NullReferenceException("Cannot locate new id");
+                            //    duplicateWorkItem =
+                            //        TfsShared.Instance.TargetTestProject.TestCases.Find(mapping.NewID).WorkItem;
 
-                                Logger =
-                                    string.Format("Test Case: {0} already exists, Test Case ID: {1}\n", test.ID,
-                                        duplicateWorkItem.Id) + Logger;
-                            }
+                            //    Logger =
+                            //        string.Format("Test Case: {0} already exists, Test Case ID: {1}\n", test.ID,
+                            //            duplicateWorkItem.Id) + Logger;
+                            //}
 
                             targetWorkItem = duplicateWorkItem;
                         }

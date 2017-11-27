@@ -28,8 +28,10 @@ namespace MTMCopyTool.ViewModels
 
         public ICommand ConnectSourceCommand { get; private set; }
         public ICommand ConnectTargetCommand { get; private set; }
+        public ICommand RefreshSourceCommand { get; private set; }
+        public ICommand RefreshTargetCommand { get; private set; }
         public ICommand DisconnectTargetCommand { get; private set; }
-        
+
         public ConnectionsViewModel()
         {
             TfsShared.Instance.Connected += Instance_Connected;
@@ -49,6 +51,9 @@ namespace MTMCopyTool.ViewModels
             CanSetBypassRules = true;
             ConnectSourceCommand = new DelegateCommand(ConnectSource, CanWork);
             ConnectTargetCommand = new DelegateCommand(ConnectTarget, CanWork);
+
+            RefreshSourceCommand = new DelegateCommand(RefreshSource, () => !string.IsNullOrEmpty(SourceTFS) && !SourceWorking);
+            RefreshTargetCommand = new DelegateCommand(RefreshTarget, () => !string.IsNullOrEmpty(TargetTFS) && !TargetWorking);
             DisconnectTargetCommand = new DelegateCommand(DisconnectTarget, () => !string.IsNullOrEmpty(TargetTFS) && !TargetWorking);
         }
 
@@ -92,6 +97,16 @@ namespace MTMCopyTool.ViewModels
             return !Working;
         }
 
+        private void RefreshSource()
+        {
+            ConnectSource();
+        }
+
+        private void RefreshTarget()
+        {
+            ConnectTarget();
+        }
+
         private void ConnectSource()
         {
             Settings.Default.SourceTFS = string.Empty;
@@ -117,7 +132,7 @@ namespace MTMCopyTool.ViewModels
             TargetWorking = false;
             TfsShared.Instance.Disconnect(false);
         }
-      
+
         private string _sourceTfs;
         public string SourceTFS
         {
